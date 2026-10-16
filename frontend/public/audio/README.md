@@ -1,7 +1,5 @@
-# Local audio previews
+# Audio preview assets
 
-The locally tested demo used 256 distinct, short, synthetic MP3 previews at `book-0.mp3` through `book-255.mp3`.
+Place audiobook sample MP3 files in this directory using the naming pattern `book-0.mp3`, `book-1.mp3`, etc. The catalog connects its first 256 synthetic titles to these asset paths.
 
-These binary preview files are **not committed in this source-only upload**. To enable preview playback, copy the audio files from your updated local project into this directory.
-
-Without those files, audio requests will return 404 even though catalog search works. They are **not** full audiobook chapters or minutes-long narration.
+Use original or appropriately licensed preview recordings.
