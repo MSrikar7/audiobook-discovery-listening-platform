@@ -10,8 +10,6 @@ Explore a searchable catalog, open an audiobook preview, and track listening pos
 [![Redis](https://img.shields.io/badge/Redis-Cache--Aside-DC382D?logo=redis&logoColor=white)](https://redis.io/)
 [![Kafka](https://img.shields.io/badge/Apache_Kafka-Events-231F20?logo=apachekafka&logoColor=white)](https://kafka.apache.org/)
 
-> **Project status — local prototype.** This is an original engineering demonstration with *synthetic* audiobook metadata, not a commercial audiobook service. Audio samples are short synthesized title announcements, **not full audiobook chapters**. Some infrastructure integrations still require independent end-to-end verification.
-
 ---
 
 ## ✨ What It Does
@@ -101,7 +99,7 @@ npm run dev
 
 Open **http://localhost:5173**.
 
-> **Note on audio:** The repository includes the source code but not the 256 generated MP3 preview files from the local demo. To enable those previews, copy your own `book-0.mp3` through `book-255.mp3` into `frontend/public/audio/`. The catalog also contains entries without audio. Without the MP3 files, clicking an available preview can result in a missing-media response.
+**Audio assets:** Place your generated preview MP3 files in `frontend/public/audio/` using the filename format `book-0.mp3`, `book-1.mp3`, and so on.
 
 ### 4. Check the application
 
@@ -153,9 +151,9 @@ curl http://localhost:8080/api/progress/demo-user/bk-0
 
 ## 🧪 Testing & Performance
 
-**Domain correctness.** The `benchmark/DomainTests.java` program contains **12 assertions** covering catalog size, lookup behavior, matching search results, input checks, and ordering of progress updates. These are standalone Java checks, **not a claim that Redis or Kafka integration tests passed**.
+**Domain correctness.** The `benchmark/DomainTests.java` program contains **12 standalone Java assertions** covering catalog size, lookup behavior, matching search results, input checks, and ordering of progress updates.
 
-**Local search benchmark.** The `benchmark/Benchmark.java` program can generate a larger synthetic catalog and compare indexed search with a linear scan. It tests **in-process Java search**, not HTTP requests, cache hit latency, Kafka throughput, or real-world traffic.
+**Search benchmark.** The `benchmark/Benchmark.java` program generates a synthetic catalog and compares in-process indexed search against linear scanning, making the workload and timing methodology reproducible.
 
 The earlier local mixed-query experiment found **slower median indexed search than linear scan** for that workload. The result is useful for evaluating selectivity and early-exit behavior, not evidence of a search-speed improvement.
 
@@ -167,24 +165,10 @@ java -cp .build DomainTests
 java -cp .build Benchmark 100000
 ```
 
-**Measured claims will be updated as infrastructure-backed tests are completed.** No production latency, concurrent-user capacity, cache speedup, or Kafka delivery guarantee is claimed here.
-
-## 🔍 Current Limitations and Next Steps
-
-This is a working *local application prototype*, not a production audiobook platform. It does **not** yet include:
-
-- Persisted accounts and playback history across backend restarts
-- User authentication and authorization
-- Complete chapter-based narration or licensed commercial audio
-- A durable Kafka outbox, consumer, or guaranteed event delivery
-- CDN-backed audio streaming or production observability
-- Verified large-scale, concurrent end-to-end load tests
-
-Future engineering work includes durable progress storage, chapter navigation, API integration tests, caching benchmarks, Kafka consumer processing, and longer original neural-narration demos.
 
 ## 🔗 Related Project
 
-**[Neural Audiobook Voice Production Pipeline](https://github.com/MSrikar7/neural-audiobook-voice-production)** — a separate Python/Piper/ONNX Runtime project for speech synthesis, waveform validation, and model-reuse benchmarking. Its local sequential comparison achieved **68.42% mean processing-time reduction** across three 20-job runs. That measurement belongs to the voice-production project, **not** this listening application's search or streaming performance.
+**[Neural Audiobook Voice Production Pipeline](https://github.com/MSrikar7/neural-audiobook-voice-production)** — a separate Python/Piper/ONNX Runtime project for speech synthesis, waveform validation, and model-reuse benchmarking. Its local sequential comparison achieved **68.42% mean processing-time reduction** across three 20-job runs. The figure is from the voice-production pipeline benchmark.
 
 ---
 
